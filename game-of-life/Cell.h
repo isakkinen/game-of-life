@@ -1,6 +1,9 @@
 #pragma once
 #include "CellState.h"
 
+/*
+@brief A singular cell that changes state based on number of neighbouring cells
+*/
 class Cell {
 private:
     CellState state{ CellState::Alive };

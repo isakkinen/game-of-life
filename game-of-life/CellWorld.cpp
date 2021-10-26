@@ -1,25 +1,39 @@
 #pragma once
 #include "CellWorld.h"
 
+/*
+@brief Initiates CellWorld to given size according to given parameters
+@param width Width of the active play area
+@param height Height of the active play area
+*/
 CellWorld::CellWorld(const size_t width, const size_t height)
     : width(width), height(height) {
     cells = std::vector<Cell>(width * height);
     std::fill(cells.begin(), cells.end(), Cell(CellState::Dead));
     cursor = sf::RectangleShape({ gridWidth, gridHeight });
     cursor.setFillColor(sf::Color::Red);
-    std::cout << "Cells width: " << cells.size() / height << ", Cells height: " << cells.size() / width << std::endl;
     load();
 }
 
+/*
+@brief Initiates CellWorld to given size and position according to given parameters
+@param width Width of the active play area
+@param height Height of the active play area
+@param x World's x-coordinate
+@param y World's y-coordinate
+*/
 CellWorld::CellWorld(const size_t width, const size_t height, const size_t x, const size_t y)
     : width(width), height(height), offsetX(x), offsetY(y) {
     cells = std::vector<Cell>(width * height);
     cursor = sf::RectangleShape({ gridWidth, gridHeight });
     cursor.setFillColor(sf::Color::Red);
-    std::cout << "Cells width: " << cells.size() / height << ", Cells height: " << cells.size() / width << std::endl;
     load();
 }
 
+/*
+@brief Gives the state of cell inhabiting given coordinates
+@return Cell's state, or CellState::Dead if not found
+*/
 CellState CellWorld::getCellState(const int x, const int y) {
     if (x < 0 || x >= width || y < 0 || y >= height) {
         return CellState::Dead;
@@ -27,14 +41,28 @@ CellState CellWorld::getCellState(const int x, const int y) {
     return cells[x + y * width].getState();
 }
 
+/*
+@brief Gives size of the CellWorld in width and height
+@return CellWorld's size in width and heigth
+*/
 sf::Vector2u CellWorld::getSize() const {
     return { (unsigned)width, (unsigned)height };
 }
 
+/*
+@brief Gives size of the cells in width and height
+@return Size of the cells in width and height
+*/
 sf::Vector2f CellWorld::getCellSize() const {
     return { gridWidth, gridHeight };
 }
 
+/*
+@brief Gives a pointer to cell inhabiting given coordinates
+@param x Cell's x-coordinate
+@param y Cell's y-coordinate
+@return Cell if found in given position, null if not found
+*/
 Cell* CellWorld::getCell(const int x, const int y) {
     if (x < 0 || x >= width || y < 0 || y >= height) {
         return nullptr;
@@ -51,6 +79,9 @@ void CellWorld::updateCell(const int x, const int y) {
     setCellColor(x, y, cellColor);
 }
 
+/*
+@brief Calculates cell in to it's neighbouring cells' counting
+*/
 void CellWorld::countNeighbours(const size_t x, const size_t y) {
     Cell* cell = getCell(x, y);
     if (!cell || (cell->getState() != CellState::Alive)) return;
@@ -65,6 +96,9 @@ void CellWorld::countNeighbours(const size_t x, const size_t y) {
     }
 }
 
+/*
+@brief Sets given cell's state, if cell is found
+*/
 void CellWorld::setCellState(const size_t x, const size_t y, const CellState state) {
     Cell *cell = getCell(x, y);
     if (!cell) return;
@@ -73,6 +107,9 @@ void CellWorld::setCellState(const size_t x, const size_t y, const CellState sta
     setCellColor(x, y, cellColor);
 }
 
+/*
+@brief Calculates CellWorld's next state and updates singular cells
+*/
 void CellWorld::processNextState() {
     for (size_t x = 0; x <= width + 2; ++x) {
         for (size_t y = 0; y <= height + 2; ++y) {
@@ -91,6 +128,9 @@ void CellWorld::processNextState() {
     }
 }
 
+/*
+@brief Loads whole World and updates cells' coloring accordingly
+*/
 void CellWorld::load() {
     vertices.setPrimitiveType(sf::Quads);
     vertices.resize(width * height * 4);
@@ -103,6 +143,11 @@ void CellWorld::load() {
     }
 }
 
+/*
+@brief Set's World's size
+@param width New width
+@param height New height
+*/
 void CellWorld::setWorldSize(const size_t width, const size_t height) {
     if (width <= 0 || height <= 0) return;
     while (width > this->width) {
@@ -127,6 +172,11 @@ void CellWorld::setWorldSize(const size_t width, const size_t height) {
     load();
 }
 
+/*
+@brief Sets cursor position
+@param x Cursor's x-coordinate
+@param y Cursor's y-coordinate
+*/
 void CellWorld::setCursorPosition(const size_t x, const size_t y) {
     if (x < 0 || x >= width || y < 0 || y >= height) return;
     const auto xPos = (x + CELL_MARGIN * x) * gridWidth + offsetX;
@@ -134,6 +184,32 @@ void CellWorld::setCursorPosition(const size_t x, const size_t y) {
     cursor.setPosition({ xPos, yPos });
 }
 
+/*void CellWorld::handleEvent(const sf::Event event)
+{
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+        worldWidth = --worldWidth >= MIN_WORLD_SIZE ? worldWidth : MIN_WORLD_SIZE;
+        cw.setWorldSize(worldWidth, worldHeight);
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+        worldWidth = ++worldWidth <= MAX_WORLD_SIZE ? worldWidth : MAX_WORLD_SIZE;
+        cw.setWorldSize(worldWidth, worldHeight);
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+        worldHeight = ++worldHeight <= MAX_WORLD_SIZE ? worldHeight : MAX_WORLD_SIZE;
+        cw.setWorldSize(worldWidth, worldHeight);
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+        worldHeight = --worldHeight >= MIN_WORLD_SIZE ? worldHeight : MIN_WORLD_SIZE;
+        cw.setWorldSize(worldWidth, worldHeight);
+    }
+}*/
+
+/*
+@brief Set's cell's color if found in given coordinates
+@param x Targeting cell's x-coordinate
+@param y Targeting cell's y-coordinate
+@param color Color to be set for the cell
+*/
 void CellWorld::setCellColor(const int x, const int y, const sf::Color color) {
     if (x < 0 || x >= width || y < 0 || y >= height) return;
     sf::Vertex* quad = &vertices[(x + y * width) * 4];
@@ -151,6 +227,11 @@ void CellWorld::setCellColor(const int x, const int y, const sf::Color color) {
     quad[3].color = color;
 }
 
+/*
+@brief Draws the CellWorld and the cursor
+@param target Rendering target
+@param states Rendering states
+*/
 void CellWorld::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     states.transform.translate({ (float)offsetX, (float)offsetY });
     target.draw(vertices, states);

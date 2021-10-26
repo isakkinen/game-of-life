@@ -4,6 +4,9 @@
 #include "Cell.h"
 #include "Global.h"
 
+/*
+@brief Governs a group of cell's and their states based on game-of-life rules
+*/
 class CellWorld : public sf::Drawable {
 private:
     std::vector<Cell> cells;
@@ -43,6 +46,8 @@ public:
     void setWorldSize(const size_t width, const size_t height);
 
     void setCursorPosition(const size_t x, const size_t y);
+
+    //void handleEvent(const sf::Event event);
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
