@@ -11,7 +11,7 @@ int main()
     sf::Text info = sf::Text();
     info.setCharacterSize(18);
     sf::Font font = sf::Font();
-    font.loadFromFile("arial.ttf");
+    font.loadFromFile("fonts/arial.ttf");
     info.setFont(font);
     info.setString("[Up/Down/Left/Right control the World size]\t\t[A/D control speed]\n[Space to update during pause]\t\t\t\t\t\t\t[Esc to pause/play]");
     info.setPosition({ 8.f, 8.f });
