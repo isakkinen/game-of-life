@@ -54,7 +54,6 @@ void CellWorld::updateCell(const int x, const int y) {
 void CellWorld::countNeighbours(const size_t x, const size_t y) {
     Cell* cell = getCell(x, y);
     if (!cell || (cell->getState() != CellState::Alive)) return;
-
     for (int x_offset = -1; x_offset <= 1; ++x_offset) {
         for (int y_offset = -1; y_offset <= 1; ++y_offset) {
             if (x_offset == 0 && y_offset == 0) continue; // Ignore the center cell
@@ -75,10 +74,8 @@ void CellWorld::setCellState(const size_t x, const size_t y, const CellState sta
 }
 
 void CellWorld::processNextState() {
-    for (size_t x = 0; x < width; ++x) {
-        for (size_t y = 0; y < height; ++y) {
-            Cell *cell = &cells[x + y * width];
-
+    for (size_t x = 0; x <= width + 2; ++x) {
+        for (size_t y = 0; y <= height + 2; ++y) {
             countNeighbours(x, y);
 
             // Update old cells to their new states
