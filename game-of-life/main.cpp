@@ -13,7 +13,7 @@ int main()
     sf::Font font = sf::Font();
     font.loadFromFile("arial.ttf");
     info.setFont(font);
-    info.setString("[Up/Down/Left/Right control the World size]\t\t[A/D control speed]\n[Space to update during pause]\t\t\t\t\t\t\t[Enter to pause/play]");
+    info.setString("[Up/Down/Left/Right control the World size]\t\t[A/D control speed]\n[Space to update during pause]\t\t\t\t\t\t\t[Esc to pause/play]");
     info.setPosition({ 8.f, 8.f });
     info.setFillColor(sf::Color::White);
     background.setSize({ WINDOW_WIDTH + WINDOW_MARGIN, WINDOW_HEIGHT + WINDOW_MARGIN });
@@ -98,11 +98,11 @@ int main()
 
         }
 
-        if ( !pressed && sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter)) {
+        if ( !pressed && sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
             paused = !paused;
             pressed = true;
         }
-        else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter)) {
+        else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
             pressed = false;
         }
 
