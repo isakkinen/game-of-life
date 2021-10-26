@@ -105,20 +105,21 @@ void CellWorld::load() {
 
 void CellWorld::setWorldSize(const size_t width, const size_t height) {
     if (width <= 0 || height <= 0) return;
-    if (width > this->width) {
+    while (width > this->width) {
         for (size_t y = 0; y < this->height; ++y) {
             cells.insert(cells.begin() + (width - 1) + y * (width), Cell(CellState::Dead));
         }
+        ++this->width;
     }
-    else if (width < this->width) {
+    while (width < this->width) {
         for (size_t y = 0; y < this->height; ++y) {
             cells.erase(cells.begin() + width + y * width);
         }
+        --this->width;
     }
     cells.resize(width * height, Cell(CellState::Dead));
     this->width = width;
     this->height = height;
-    //cells.resize(width * height, Cell());
     gridWidth = (WINDOW_WIDTH - WINDOW_MARGIN) / (width + (width * CELL_MARGIN));
     gridHeight = (WINDOW_HEIGHT - WINDOW_MARGIN) / (height + (height * CELL_MARGIN));
     cursor.setSize({ gridWidth, gridHeight });
