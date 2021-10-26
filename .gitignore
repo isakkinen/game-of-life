@@ -261,5 +261,5 @@ __pycache__/
 *.pyc
 
 # Visual Studio files
-*.vcxproj
-*.filters
+#*.vcxproj
+#*.filters
